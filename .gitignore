@@ -4,3 +4,4 @@
 *.jpg
 *.jpg
 COCO Dataset/Code/unet_coco1.hdf5
+*.png
