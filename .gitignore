@@ -5,3 +5,4 @@
 *.jpg
 COCO Dataset/Code/unet_coco1.hdf5
 *.png
+COCO Dataset/Code/deeplab.hdf5

@@ -1,2 +1,5 @@
 https://medium.com/analytics-vidhya/blur-or-change-background-of-images-using-machine-learning-with-tensorflow-f7dab3ddab6f
 # article for the blurring and removal
+
+https://towardsdatascience.com/virtual-background-for-video-conferencing-using-machine-learning-dfba17d90aa9
+# article for virtual background (important!!)
