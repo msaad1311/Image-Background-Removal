@@ -59,7 +59,7 @@ def save_imgs(src_path,dest_path,className,coco,width,height):
     ## Saving the images to the destination folder
     
     for i in tqdm(range(len(unique_images)),desc='Saving Images'):
-        img=cv2.resize(cv2.imread(unique_images[i]['file_name']),(height,width))
+        img=cv2.resize(cv2.imread(unique_images[i]['file_name']),(width,height))
         cv2.imwrite(os.path.join(dest_path,unique_images[i]['file_name']),img)
     
     os.chdir(path_old)
@@ -102,7 +102,6 @@ def save_ann(dest_path,unique_images,coco,cat_ids,width,height):
     return
 
 def cleanup(target_path,reference_path):
-    path_old = os.getcwd()
     count=0
     for i in os.listdir(target_path):
         if i not in os.listdir(reference_path):
