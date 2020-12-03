@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 import tensorflow as tf
 from tensorflow import keras
@@ -10,6 +11,7 @@ os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 gpus = tf.config.experimental.list_physical_devices('GPU')
 from tensorflow.keras import backend as K
 from tensorflow.keras.losses import binary_crossentropy
+from tensorflow.keras import layers
 
 assert tf.test.is_gpu_available() == True
 
@@ -29,8 +31,8 @@ def bce_dice_loss(y_true, y_predict):
     return binary_crossentropy(y_true, y_predict) + (1-dice_coef(y_true, y_predict))
 
 def metrics(target,prediction):
-    intersection = np.logical_and(y_test, p)
-    union = np.logical_or(y_test, p)
+    intersection = np.logical_and(target,prediction)
+    union = np.logical_or(target, prediction)
     iou_score = np.sum(intersection) / np.sum(union)
     return iou_score
 
@@ -112,7 +114,7 @@ def build_unet(input_img,n_filters, dropout, classes,batchnorm):
 
     return model
 
-class Conv2D_custom(Layer):
+class Conv2D_custom(layers.Layer):
     
     ''' args:
 
