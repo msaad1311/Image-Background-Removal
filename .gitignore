@@ -1,3 +1,7 @@
 
 *.gz
 Testing/deeplabv3_xception_tf_dim_ordering_tf_kernels.h5
+*.json
+*.jpg
+*.png
+COCO Dataset/Code/deeplab.hdf5
