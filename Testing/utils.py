@@ -1,6 +1,7 @@
 import numpy as np 
 from PIL import Image
 import matplotlib.pyplot as plt
+import cv2
 import torch
 import torchvision.transforms as T
 
@@ -24,7 +25,7 @@ def decode_segmap(image, nc=21):
     rgb = np.stack([r, g, b], axis=2)
     return rgb
 
-def segment(net, path=None, frame=None, show_orig=True, dev='cuda'):
+def segment(net, path=None, frame=None, show_orig=False, dev='cuda'):
     if path!=None:
         img = Image.open(path)
     else:
@@ -33,13 +34,63 @@ def segment(net, path=None, frame=None, show_orig=True, dev='cuda'):
         plt.imshow(img)
         plt.axis('off')
         plt.show()
+        
 
-    trf = T.Compose([T.Resize(640), T.CenterCrop(224), T.ToTensor(), T.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225])])
+    if isinstance(img,np.ndarray):
+        img = Image.fromarray(img)
+    trf = T.Compose([T.ToTensor(), T.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225])])#, T.Resize(640), T.CenterCrop(224),
     inp = trf(img).unsqueeze(0).to(dev)
     out = net.to(dev)(inp)['out']
     om = torch.argmax(out.squeeze(), dim=0).detach().cpu().numpy()
     rgb = decode_segmap(om)
-    plt.imshow(rgb); plt.axis('off'); plt.show()
-    cv2.imwrite('mask2.png' , rgb)
+    # plt.imshow(rgb); plt.axis('off'); plt.show()
+    # cv2.imwrite('mask2.png' , rgb)
     #   files.download('mask2.png')
     return rgb
+
+def bg_change(seg,frame,bg):
+    if bg == 1: # cropped image
+        outImage=cv2.subtract(seg,frame)
+        outImage=cv2.subtract(seg,outImage)
+        outImage[seg == 0] = 255
+        outImage = np.array(outImage,dtype=float)/float(255)
+        
+        return outImage
+    
+    elif bg in [2,3]: # blurred image
+        if bg==2:
+            background = cv2.GaussianBlur(frame, (31,31), 0)
+        elif bg==3:
+            background = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            background = cv2.cvtColor(background, cv2.COLOR_GRAY2RGB)
+        
+        foreground = frame.astype(float)
+        background = background.astype(float)
+
+        th, alpha = cv2.threshold(np.array(seg),0,255, cv2.THRESH_BINARY)
+        alpha = cv2.GaussianBlur(alpha, (7,7),0)
+        alpha = alpha.astype(float)/255
+        foreground = cv2.multiply(alpha, foreground)
+        background = cv2.multiply(1.0 - alpha, background)
+        outImage = cv2.add(foreground, background)
+        outImage = np.array(outImage,dtype=float)/float(255)
+        
+        return outImage
+    
+    else:
+        alpha = seg
+        height,width,channel = seg.shape
+        alpha = alpha.astype(float)/255
+        
+        background = cv2.imread(f"background{bg}.jpg")
+        background = cv2.resize(background,(width,height),interpolation = cv2.INTER_AREA)
+        
+        foreground = frame.astype(float)
+        background = background.astype(float)
+
+        foreground = cv2.multiply(alpha, foreground)
+        background = cv2.multiply(1.0 - alpha, background)
+        outImage = cv2.add(foreground, background)
+        outImage = np.array(outImage,dtype=float)/float(255)
+        return outImage
+        
