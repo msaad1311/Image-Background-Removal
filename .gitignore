@@ -7,3 +7,5 @@ Testing/deeplabv3_xception_tf_dim_ordering_tf_kernels.h5
 COCO Dataset/Code/deeplab.hdf5
 Testing/segmentation.onnx
 Tensorflow_js/virtual background/Selfie-Anywhere/
+Tensorflow_js/realtime-semantic-segmentation/
+Testing/pytorch2keras/
