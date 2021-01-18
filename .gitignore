@@ -9,3 +9,4 @@ Testing/segmentation.onnx
 Tensorflow_js/virtual background/Selfie-Anywhere/
 Tensorflow_js/realtime-semantic-segmentation/
 Testing/pytorch2keras/
+Take -2/FBA.pth
