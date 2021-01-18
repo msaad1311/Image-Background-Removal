@@ -59,7 +59,9 @@ while(True):
     matte_tensor = matte_tensor.repeat(1, 3, 1, 1)
     matte_np = matte_tensor[0].data.cpu().numpy().transpose(1, 2, 0)
     fg_np = matte_np * frame_np + (1 - matte_np) * np.full(frame_np.shape, 255.0)
-    view_np = np.uint8(np.concatenate((bg, fg_np), axis=1))
+    fg_np = cv2.add(fg_np, bg)
+    fg_np = np.array(fg_np,dtype=float)/float(255)
+    view_np = np.uint8(np.concatenate((frame_np, fg_np), axis=1))
     view_np = cv2.cvtColor(view_np, cv2.COLOR_RGB2BGR)
 
     cv2.imshow('MODNet - WebCam [Press \'Q\' To Exit]', view_np)
