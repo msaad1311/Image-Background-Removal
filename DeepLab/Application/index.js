@@ -1,20 +1,15 @@
 document.getElementById('mainBody').onload = function() {onLoad()}
-
+const tf = require("@tensorflow/tfjs");
 
 async function onLoad() {
     console.log('onLoad loaded')
   const MODEL_URL = "preTrained\\tensorflowjs_model.pb";
   const WEIGHTS_URL = "preTrained\\weights_manifest.json";
+  const weights = "deeplabv3_mnv2_pascal_train_aug_web_model/model.json"
   // Model's input and output have width and height of 513.
   const TENSOR_EDGE = 513;
-  const model = await tf.loadGraphModel(WEIGHTS_URL);
-  // const model = await tf.loadFrozenModel(MODEL_URL, WEIGHTS_URL)
-  // const [model, stream] =await Promise.all([
-  //   tf.loadFrozenModel(MODEL_URL, WEIGHTS_URL),
-  //   navigator.mediaDevices.getUserMedia({
-  //     video: { facingMode: "user", frameRate: 30, width: 640, height: 480 },
-  //   }),
-  // ]);
+  const model = await tf.loadLayersModel(weights);
+  
 }
 
 
@@ -51,3 +46,13 @@ async function onLoad() {
 // };
 // video.oncanplay = render;
 // video.srcObject = stream;
+
+
+// const model = await loadGraphModel(weights);
+  // const model = await tf.loadFrozenModel(MODEL_URL, WEIGHTS_URL)
+  // const [model, stream] =await Promise.all([
+  //   tf.loadFrozenModel(MODEL_URL, WEIGHTS_URL),
+  //   navigator.mediaDevices.getUserMedia({
+  //     video: { facingMode: "user", frameRate: 30, width: 640, height: 480 },
+  //   }),
+  // ]);
