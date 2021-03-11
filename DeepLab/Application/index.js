@@ -1,19 +1,17 @@
 document.getElementById('mainBody').onload = function() {onLoad()}
-const tf = require("@tensorflow/tfjs");
+import * as tf from '@tensorflow/tfjs';
 
 async function onLoad() {
     console.log('onLoad loaded')
-  const MODEL_URL = "preTrained\\tensorflowjs_model.pb";
-  const WEIGHTS_URL = "preTrained\\weights_manifest.json";
-  const weights = "deeplabv3_mnv2_pascal_train_aug_web_model/model.json"
+  const weights = "model.json"
   // Model's input and output have width and height of 513.
-  const TENSOR_EDGE = 513;
-  const model = await tf.loadLayersModel(weights);
-  
+  const model = await tf.loadGraphModel(weights);
+  console.log(model)
 }
 
 
 // const video = document.createElement("video");
+// const TENSOR_EDGE = 513;
 // video.autoplay = true;
 // video.width = video.height = TENSOR_EDGE;
 // const ctx = document.getElementById("canvas").getContext("2d");
